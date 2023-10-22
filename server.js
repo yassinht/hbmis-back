@@ -1,13 +1,26 @@
 const express = require('express')
 const nodemailer = require('nodemailer')
 const dotenv = require('dotenv');
+const path=require('path');
 dotenv.config();
 const app = express();
 const cors =require('cors')
 const port =5000 ;
+
+
+
+
+
+
+
+
+
+
+
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cors());
+
 app.post('/send-mail',(req,res)=>{
     const{name,email,phone,message} =req.body
     const transporter = nodemailer.createTransport({
@@ -38,6 +51,15 @@ transporter.sendMail(mailOptions, (error, info) => {
 
 
 
+});
+
+
+const staticFilesPath = path.join(__dirname, 'dist', 'hbmis');
+app.use(express.static(staticFilesPath));
+
+// Route to serve the main HTML file
+app.get('/', (req, res) => {
+    res.sendFile(path.join(staticFilesPath, 'index.html'));
 });
 
 app.listen(port,()=>{
